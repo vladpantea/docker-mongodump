@@ -2,8 +2,28 @@
 
 set -e
 
-echo "Job started: $(date)"
+echo "Cleanup backup job started at: $(date)"
+#directory with database dump
+DIRECTORY=/data/backup/*
+#1 week old date(decimal)
+WEEKOLD=$(date -d last-week +%s)
 
+#check all dump files age
+for file in $DIRECTORY
+do
+    echo "Week old: $WEEKOLD"
+    echo "File creation is: $(date -r $file +%s)"
+
+    FILEAGE=$($(date -r $file +%s))
+    echo "Fileage is: $FILEAGE"
+
+    if [[$WEEKOLD < $FILEAGE]]; then
+        echo "Delete $file ..."
+        rm $file
+    fi
+done
+
+echo "Backup job started at: $(date)"
 DATE=$(date +%Y%m%d_%H%M%S)
 FILE="/data/backup/backup-$DATE.tar.gz"
 
