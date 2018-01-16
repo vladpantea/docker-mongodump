@@ -11,16 +11,13 @@ WEEKOLD=$(date -d last-week +%s)
 #check all dump files age
 for file in $DIRECTORY
 do
-    echo "Week old: $WEEKOLD"
-    echo "File creation is: $(date -r $file +%s)"
-
-    FILEAGE=$($(date -r $file +%s))
-    echo "Fileage is: $FILEAGE"
-
-    if [[$WEEKOLD < $FILEAGE]]; then
+    FILEAGE=$(date -r $file +%s)
+    
+    if [ ${WEEKOLD#*.} \> ${FILEAGE#*.} ];    
+    then
         echo "Delete $file ..."
         rm $file
-    fi
+    fi    
 done
 
 echo "Backup job started at: $(date)"
@@ -31,5 +28,4 @@ mkdir -p dump
 mongodump -h $MONGO_HOST -p $MONGO_PORT
 tar -zcvf $FILE dump/
 rm -rf dump/
-
 echo "Job finished: $(date)"

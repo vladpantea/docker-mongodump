@@ -9,7 +9,7 @@ export MONGO_PORT=${MONGO_PORT:-27017}
 if [[ "$1" == 'no-cron' ]]; then
     exec /backup.sh
 else
-    LOGFIFO='/var/log/cron.fifo'
+    LOGFIFO='/var/log/cron.log'
     if [[ ! -e "$LOGFIFO" ]]; then
         mkfifo "$LOGFIFO"
     fi
